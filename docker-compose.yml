@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+  flask_api:
+    image: flask_api
+    build: 
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: flask_api
+    ports:
+      - "5005:5005"
+      - "5678:5678"
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./backend/src/lib/app.py
+      FLASK_ENV: development
+      FLASK_PORT: 5005
+
+      INSE_DB_USER: ${INSE_DB_USER:-flask_user}
+      INSE_DB_PASSWORD: ${INSE_DB_PASSWORD:-root3tf_rest}
+      INSE_DB_HOST: ${INSE_DB_HOST:-postgres_db}
+      INSE_DB_NAME: ${INSE_DB_NAME:-inse_db}
+      INSE_DB_PORT: ${INSE_DB_PORT:-5432}
+
+    networks:
+      - dev_network
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+
+  postgres_db:
+    image: postgres:12
+    container_name: flask_api_db
+    environment:
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+      POSTGRES_USER: ${INSE_DB_USER:-flask_user}
+      POSTGRES_PASSWORD: ${INSE_DB_PASSWORD:-root3tf_rest}
+      POSTGRES_DB: ${INSE_DB_NAME:-inse_db}
+      POSTGRES_PORT: ${INSE_DB_PORT:-5432}
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      - dev_network
+    volumes:
+      - flask_api_db:/var/lib/postgresql/data
+    command: -p 5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  dev_network:
+    name: docker_safety_network
+    external: true
+
+volumes:
+  flask_api_db:
