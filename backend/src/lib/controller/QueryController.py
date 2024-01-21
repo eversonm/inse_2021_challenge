@@ -25,6 +25,9 @@ class QueryController():
 
     def get_all_json(self, **args):
         filters = []
+        page = 1
+        if args["page"]!=1:
+            page = args["page"]
         if args["federacao"]!=0:
             filters.append(Federativas.codigo_uf == args["federacao"])
         if args["municipio"]!=0:
@@ -76,9 +79,8 @@ class QueryController():
             Federativas.nome_uf,
         ).filter(*filters)
         
-
         pages_quantity = query.count()/int(10)
-        escolas = query.limit(10).offset(int(10)*(int(1)-1))
+        escolas = query.limit(10).offset(int(10)*(int(page)-1))
         list_ = []
 
         for row in escolas:
