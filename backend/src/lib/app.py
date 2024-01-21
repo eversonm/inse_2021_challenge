@@ -28,5 +28,6 @@ if __name__ == "src.lib.app":
 
     with app.app_context():
         configure_blueprint()
+        # insert_federativo()
 
     app.run(host="0.0.0.0", port="5005", debug=True, use_reloader=True)

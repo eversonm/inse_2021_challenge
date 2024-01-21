@@ -1,13 +1,9 @@
-import uuid
-from sqlalchemy import func, Boolean, Column, DateTime, UUID
+from sqlalchemy import func, Boolean, Column, DateTime, INTEGER
 from src.lib.database.connector_thread import Base, db_session
 
 class BaseModel(Base):
     __abstract__ = True
 
-    id = Column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True
-    )
     is_deleted = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime(), nullable=False, default=func.now())
     updated_at = Column(
@@ -25,7 +21,7 @@ class BaseModel(Base):
     def __str__(self):
         fields = [f"{k}={v}" for k, v in dict(self).items() if k != "id"]
         str_fields = ", ".join(fields)
-        return f"<{self.__class__.__name__} {self.id} ({str_fields})>"
+        return f"<{self.__class__.__name__} ({str_fields})>"
 
     def __repr__(self):
         return str(self)
