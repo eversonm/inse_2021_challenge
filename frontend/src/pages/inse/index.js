@@ -10,6 +10,8 @@ import ListItemEscola from "../../molecules/listItem";
 
 const DefaultPage = () => {
   const {
+    classificacao,
+    classificacaoList,
     capital,
     capitalList,
     countPages,
@@ -33,9 +35,10 @@ const DefaultPage = () => {
     setCapital,
     setRede,
     setSearch,
+    setClassificacao
   } = useAppFetch();
 
-  const stringQuery = `?page=${page}&federacao=${estado}&municipio=${cidade}&rede=${rede}&localizacao=${localizacao}&capital=${capital}&search=${search.toUpperCase()}`;
+  const stringQuery = `?page=${page}&federacao=${estado}&municipio=${cidade}&rede=${rede}&localizacao=${localizacao}&capital=${capital}&search=${search.toUpperCase()}&classificacao=${classificacao}`;
 
   useEffect(() => {
     if (estados.length === 0) {
@@ -43,7 +46,7 @@ const DefaultPage = () => {
     }
     fetch_cidades(estado);
     fetch_escolas(stringQuery);
-  }, [estado, cidade, rede, capital, localizacao, search, page]);
+  }, [estado, cidade, rede, capital, localizacao, search, page, classificacao]);
 
   const handleChange = useCallback((event, value) => {
     setPage(value++);
@@ -132,8 +135,9 @@ const DefaultPage = () => {
             alignItems: "center",
           }}
         >
-          <Box width="500px" sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%" }}>
             <TextField
+              fullWidth
               id="outlined-adornment"
               placeholder="Search..."
               type="text"
@@ -150,6 +154,15 @@ const DefaultPage = () => {
               }}
             />
           </Box>
+          <Box width="200px">
+            <SelectType
+              nameMenu="Classificação"
+              itemsMenu={classificacaoList}
+              tipo={classificacao}
+              setTipo={setClassificacao}
+            />
+          </Box>
+          
           <Button 
             variant="outlined"
             sx={{textTransform: "none"}}

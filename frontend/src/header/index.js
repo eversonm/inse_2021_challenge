@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const pages = ["Tela inicial", "Dashboard", "Escolas"];
+  const pages = ["Tela inicial", "Dashboard"];
 
   const switchPage = (page) => {
     switch (page) {
@@ -12,8 +12,6 @@ const Header = () => {
         return "/dashboard";
       case "Tela inicial":
         return "/";
-      case "Escolas":
-        return "/escolas";
       default:
         return "/";
     }

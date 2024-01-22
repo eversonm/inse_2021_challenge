@@ -5,6 +5,9 @@ import {
   _fetch_escolas,
   _fetch_estados,
 } from "../services/dados";
+import {
+  _fetch_piores_escolas
+} from "../services/dashboard";
 
 const AppContext = createContext({});
 
@@ -24,6 +27,7 @@ export const AppProvider = ({ children }) => {
   const [capital, setCapital] = useState(0);
   const [localizacao, setLocalizacao] = useState(0);
   const [rede, setRede] = useState(0);
+  const [classificacao, setClassificacao] = useState(0)
 
   const [search, setSearch] = useState("");
 
@@ -44,6 +48,18 @@ export const AppProvider = ({ children }) => {
     { id: 1, tipo: "Federal" },
     { id: 2, tipo: "Estadual" },
     { id: 3, tipo: "Municipal" },
+  ];
+
+  const classificacaoList = [
+    { id: 0, tipo: "Todos" },
+    { id: 1, tipo: "Nível I" },
+    { id: 2, tipo: "Nível II" },
+    { id: 3, tipo: "Nível III" },
+    { id: 4, tipo: "Nível IV" },
+    { id: 5, tipo: "Nível V" },
+    { id: 6, tipo: "Nível VI" },
+    { id: 7, tipo: "Nível VII" },
+    { id: 8, tipo: "Nível VII" },
   ];
 
   const fetch_estados = async () => {
@@ -82,12 +98,18 @@ export const AppProvider = ({ children }) => {
     setRede(0);
     setLocalizacao(0);
     setCapital(0);
+    setClassificacao(0);
     setSearch("");
   };
+
+  const fetch_piores_escolas = async () => {
+    return await _fetch_piores_escolas();
+  }
 
   return (
     <AppContext.Provider
       value={{
+        classificacao,
         capital,
         cidade,
         cidades,
@@ -101,13 +123,16 @@ export const AppProvider = ({ children }) => {
         search,
         page,
         capitalList,
+        classificacaoList,
         localizacaoList,
         redeList,
+        fetch_piores_escolas,
         fetch_cidades,
         fetch_escola,
         fetch_escolas,
         fetch_estados,
         resetData,
+        setClassificacao,
         setCapital,
         setCidade,
         setCidades,
