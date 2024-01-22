@@ -18,7 +18,7 @@ O backend foi todo construído em [python]()
 O banco de dados utilizado foi o Postgres
 
 ## Execução do backend com docker-compose
-Em um terminal, acesse a pasta do `backend`
+Tanto a API quanto o banco serão executadas utilizando docker-compose. Em um terminal, acesse a pasta do `backend`
 <pre>$ cd backend
 $ docker compose up --build
 </pre>
