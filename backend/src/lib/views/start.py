@@ -52,3 +52,12 @@ class InsetEscola(Resource):
         query = EscolasController()
         query_ = query.get(codigo_e)
         return query_, 200
+
+
+@api.route("/escola/piores")
+class InsetEscolaTop10Piores(Resource):
+    @api.doc("Listar 10 piores escolas de acordo com INSE")
+    def get(self):
+        query = EscolasController()
+        query_ = query.get_top_10_worst_media()
+        return query_, 200

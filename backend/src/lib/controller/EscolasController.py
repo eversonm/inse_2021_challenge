@@ -4,6 +4,7 @@ from src.lib.models.Federativas import Federativas
 from src.lib.models.Municipios import Municipios
 from src.lib.models.PercentualMunicipioEscola import PercentualMunicipioEscola
 from src.lib.database.connector_thread import db_session
+from sqlalchemy import desc
 
 class EscolasController():
     def get(self, codigo_e):
@@ -72,3 +73,42 @@ class EscolasController():
             })
         
         return escola
+    
+    def get_top_10_worst_media(self):
+        escolas = db_session.query(
+            Escolas, 
+            Federativas, 
+            Municipios,
+        ).join(
+            Municipios, 
+            Escolas.municipio_codigo_m==Municipios.codigo_m
+        ).join(
+            Federativas,
+            Municipios.federativa_codigo_uf==Federativas.codigo_uf
+        ).with_entities(
+            Escolas.codigo_e,
+            Escolas.nome_e,
+            Escolas.inse_classificacao,
+            Escolas.qtde_alunos,
+            Escolas.media_inse,
+            Municipios.nome_m,
+            Federativas.sigla_uf,
+            Federativas.nome_uf,
+        ).order_by(Escolas.media_inse).limit(10).all()
+
+        print(str(escolas[2]), flush=True)
+
+        l = []
+        for row in escolas:
+            l.append(humps.camelize({
+                "codigo_e": row[0],
+                "nome_e": row[1],
+                "inse_classificacao": row[2].name,
+                "qtde_alunos": row[3],
+                "media_inse": row[4],
+                "nome_m": row[5],
+                "sigla_uf": row[6],
+                "nome_uf": row[7],
+                }))
+        
+        return l

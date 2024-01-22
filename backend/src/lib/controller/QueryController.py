@@ -56,6 +56,9 @@ class QueryController():
                     [InseClassificacao(int(args["classificacao"]))]
                     )
             )
+        if args["search"] != "":
+            search = args["search"]
+            filters.append(Escolas.nome_e.like(f"%{search}%"))
 
         query = db_session.query(Escolas, Federativas, Municipios).join(
             Municipios, 
