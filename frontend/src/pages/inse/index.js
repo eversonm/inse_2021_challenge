@@ -1,17 +1,11 @@
-import {
-  Box,
-  InputBase,
-  Pagination,
-  Paper,
-  TextField,
-  alpha,
-  styled,
-} from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, InputAdornment, Pagination, Paper, TextField, Typography } from "@mui/material";
+import React, { useCallback, useEffect } from "react";
 import SelectCustomEstado from "../../atoms/selectEstado";
 import SelectCustomMunicipio from "../../atoms/selectMunicipio";
 import SelectType from "../../atoms/selectTipo";
 import { useAppFetch } from "../../hooks/fetch";
+import HeaderListItemEscola from "../../molecules/headerListItem";
 import ListItemEscola from "../../molecules/listItem";
 
 const DefaultPage = () => {
@@ -28,73 +22,42 @@ const DefaultPage = () => {
     localizacaoList,
     fetch_cidades,
     escolas,
-    // search,
+    search,
     fetch_escolas,
     page,
     rede,
+    resetData,
     redeList,
     setPage,
     setLocalizacao,
     setCapital,
     setRede,
-    // setSearch,
+    setSearch,
   } = useAppFetch();
 
-  const [search, setSearch] = useState("");
-
-  const stringQuery = `?federacao=${estado}&municipio=${cidade}&rede=${rede}&localizacao=${localizacao}&capital=${capital}&search=${search}`;
+  const stringQuery = `?page=${page}&federacao=${estado}&municipio=${cidade}&rede=${rede}&localizacao=${localizacao}&capital=${capital}&search=${search.toUpperCase()}`;
 
   useEffect(() => {
-    if (estados.length === 0){
+    if (estados.length === 0) {
       fetch_estados();
     }
     fetch_cidades(estado);
     fetch_escolas(stringQuery);
-  }, [estado, cidade, rede, capital, localizacao, search]);
+  }, [estado, cidade, rede, capital, localizacao, search, page]);
 
   const handleChange = useCallback((event, value) => {
     setPage(value++);
-  }, []);
+  }, [setPage]);
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
+  const typographyStyle = {
+    color: "#727272",
+    fontFamily: "Trebuchet MS",
+    fontStyle: "normal",
+    fontWeight: 700,
+    lineHeight: "normal",
+    fontSize: "35px",
     alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
-  }));
+  };
 
   return (
     <Paper
@@ -123,49 +86,83 @@ const DefaultPage = () => {
             alignItems: "center",
           }}
         >
+          <Typography sx={typographyStyle}>Tabela de Escolas</Typography>
+        </Box>
+        <Box
+          sx={{
+            marginTop: "20px",
+            height: "100%",
+            backgroundColor: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <SelectCustomEstado nameMenu="Estado" itemsMenu={estados} />
           {estado !== 0 && (
             <SelectCustomMunicipio nameMenu="Cidade" itemsMenu={cidades} />
           )}
-          <SelectType nameMenu="Tipo de rede" itemsMenu={redeList} tipo={rede} setTipo={setRede} />
-          <SelectType nameMenu="Localização" itemsMenu={localizacaoList} tipo={localizacao} setTipo={setLocalizacao}  />
-          <SelectType nameMenu="Capital" itemsMenu={capitalList} tipo={capital} setTipo={setCapital}  />
-          <Box
-          sx={{width: "100%"}}>
-            <TextField 
-              id="outlined-adornment" 
+          <SelectType
+            nameMenu="Tipo de rede"
+            itemsMenu={redeList}
+            tipo={rede}
+            setTipo={setRede}
+          />
+          <SelectType
+            nameMenu="Localização"
+            itemsMenu={localizacaoList}
+            tipo={localizacao}
+            setTipo={setLocalizacao}
+          />
+          <SelectType
+            nameMenu="Capital"
+            itemsMenu={capitalList}
+            tipo={capital}
+            setTipo={setCapital}
+          />
+          
+        </Box>
+
+        <Box
+          sx={{
+            marginTop: "12px",
+            backgroundColor: "white",
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          <Box width="500px" sx={{ width: "100%" }}>
+            <TextField
+              id="outlined-adornment"
               placeholder="Search..."
               type="text"
-              value={search} 
-              onChange={(event) => {
-                  event.preventDefault();
-                  if (event.target.value) {
-                    console.log(event.target.value)
-                    setSearch(event.target.value.toLowerCase());
-                  }
-                }}
-            />
-          </Box>
-          
-          {/* <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              // value={search}
-              defaultValue={search}
+              value={search}
+              InputProps={{
+                startAdornment:
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              }}
               onChange={(event) => {
                 event.preventDefault();
-                if (event.target.value) {
-                  console.log(event.target.value)
-                  setSearch(event.target.value.toLowerCase());
-                }
+                setSearch(event.target.value);
               }}
             />
-          </Search> */}
+          </Box>
+          <Button 
+            variant="outlined"
+            sx={{textTransform: "none"}}
+            onClick={(event) => {
+              event.preventDefault();
+              resetData();
+            }}
+          >
+            Apagar Filtros
+          </Button>
         </Box>
+
+        <HeaderListItemEscola />
         <ListItemEscola escolas={escolas} />
         <Pagination
           style={{

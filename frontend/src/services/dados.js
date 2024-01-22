@@ -43,3 +43,17 @@ export const _fetch_escolas = async (params) => {
       throw new Error(String(error));
     });
 };
+
+export const _fetch_escola = async (id) => {
+  return api
+    .get(`${baseUrl}/escola/${id}`)
+    .then((response) => {
+      if (response?.status === 200) {
+        return response.data;
+      }
+      return response;
+    })
+    .catch((error) => {
+      throw new Error(String(error));
+    });
+};

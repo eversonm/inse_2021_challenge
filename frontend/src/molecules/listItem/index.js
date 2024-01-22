@@ -1,15 +1,12 @@
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItemButton, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const ListItemEscola = ({ escolas }) => {
   const navigate = useNavigate();
 
-  const redirect_escola_id = (id) => {
-    navigate(`/confinedEnviroment/${id}`);
+  const redirect_escola_id = (escola) => {
+    navigate(`/escola/${escola.codigoE}`);
   };
 
   const typographyStyle = {
@@ -26,7 +23,7 @@ const ListItemEscola = ({ escolas }) => {
     <List>
       {Array.isArray(escolas) &&
         escolas.map((escola) => (
-          <ListItem
+          <ListItemButton
             key={escola.codigoE}
             sx={{
               maxHeight: "6vh",
@@ -39,11 +36,11 @@ const ListItemEscola = ({ escolas }) => {
               display: "inline-flex",
               width: "100%",
             }}
-            onClick={() => {}}
+            onClick={() => redirect_escola_id(escola)}
           >
             <Box
               sx={{
-                width: "20%",
+                width: "10%",
                 alignItems: "center",
                 justifyContent: "left",
                 display: "flex",
@@ -55,7 +52,7 @@ const ListItemEscola = ({ escolas }) => {
 
             <Box
               sx={{
-                width: "15%",
+                width: "30%",
                 alignItems: "center",
                 justifyContent: "center",
                 display: "flex",
@@ -63,10 +60,29 @@ const ListItemEscola = ({ escolas }) => {
             >
               <Typography sx={typographyStyle}>{escola.nomeE}</Typography>
             </Box>
-
             <Box
               sx={{
-                width: "15%",
+                width: "10%",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Typography sx={typographyStyle}>{escola.nomeUf}</Typography>
+            </Box>
+            <Box
+              sx={{
+                width: "10%",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Typography sx={typographyStyle}>{escola.nomeM}</Typography>
+            </Box>
+            <Box
+              sx={{
+                width: "10%",
                 alignItems: "center",
                 justifyContent: "center",
                 display: "flex",
@@ -77,7 +93,7 @@ const ListItemEscola = ({ escolas }) => {
 
             <Box
               sx={{
-                width: "15%",
+                width: "7%",
                 alignItems: "center",
                 justifyContent: "center",
                 display: "flex",
@@ -85,27 +101,29 @@ const ListItemEscola = ({ escolas }) => {
             >
               <Typography sx={typographyStyle}>{escola.tipoLocalizacao}</Typography>
             </Box>
-
-            {/* Mocked escolas */}
             <Box
               sx={{
-                width: "10%",
-                alignItems: "end",
-                justifyContent: "end",
+                width: "7%",
+                alignItems: "center",
+                justifyContent: "center",
                 display: "flex",
               }}
             >
-              <IconButton aria-label="info" onClick={() => {}}>
-                <InfoOutlinedIcon />
-              </IconButton>
-              <IconButton aria-label="more_info" onClick={() => {}}>
-                <MoreHorizIcon />
-              </IconButton>
-              <IconButton aria-label="delete" onClick={() => {}}>
-                <DeleteOutlineIcon />
-              </IconButton>
+              <Typography sx={typographyStyle}>{escola.tipoCapital}</Typography>
             </Box>
-          </ListItem>
+            <Box
+              sx={{
+                width: "7%",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Typography sx={typographyStyle}>{escola.inseClassificacao}</Typography>
+            </Box>
+            
+            
+          </ListItemButton>
         ))}
     </List>
   );

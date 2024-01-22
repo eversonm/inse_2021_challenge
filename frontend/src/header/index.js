@@ -13,7 +13,7 @@ const Header = () => {
       case "Tela inicial":
         return "/";
       case "Escolas":
-        return "/";
+        return "/escolas";
       default:
         return "/";
     }

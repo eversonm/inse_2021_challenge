@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import {
   _fetch_cidades,
+  _fetch_escola,
   _fetch_escolas,
   _fetch_estados,
 } from "../services/dados";
@@ -12,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [cidade, setCidade] = useState(0);
 
   const [escolas, setEscolas] = useState([]);
-  const [escola, setEscola] = useState(0);
+  const [escola, setEscola] = useState();
 
   const [estados, setEstados] = useState([]);
   const [estado, setEstado] = useState(0);
@@ -69,6 +70,21 @@ export const AppProvider = ({ children }) => {
     setEscolas(old_escolas[1]);
   };
 
+  const fetch_escola = async (id) => {
+    const escola_fetch = await _fetch_escola(id);
+    setEscola(escola_fetch);
+  };
+
+  const resetData = () => {
+    setPage(1);
+    setEstado(0);
+    setCidade(0);
+    setRede(0);
+    setLocalizacao(0);
+    setCapital(0);
+    setSearch("");
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -88,8 +104,10 @@ export const AppProvider = ({ children }) => {
         localizacaoList,
         redeList,
         fetch_cidades,
+        fetch_escola,
         fetch_escolas,
         fetch_estados,
+        resetData,
         setCapital,
         setCidade,
         setCidades,
